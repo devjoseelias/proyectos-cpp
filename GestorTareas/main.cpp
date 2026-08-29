@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <windows.h>
 
 using std::cout;
@@ -9,6 +10,10 @@ using std::endl;
 using std::string;
 using std::getline;
 using std::vector;
+
+using std::ifstream;
+using std::ofstream;
+using std::stoi;
 
 void verificarDatos(string &n, int &d, int &p){
     while(n == ""){
@@ -87,6 +92,7 @@ class gestorTareas{
     public:
         gestorTareas(){
             cout << "\n--- BIENVENIDO AL SISTEMA ---\n¡Hola! Te doy la bienvenida al gestor de tareas GTC++, con este gestor puedes crear, ver, administrar y eliminar tus tareas del día. Así mismo, nosotros nos encargamos de que todos tus pendientes permanezcan guardados en tu computadoras en archivos completamente seguros de formato .bin para asegurar una velocidad extraordinaria. A continuación, te muestro un menú con opciones para que comiences. (Recuerda que para elegir, debes: (1: SI, 2: NO)).\n" << endl;
+            cargarTareas();
         }
 
         void agregarTarea(){
@@ -174,7 +180,41 @@ class gestorTareas{
             cout << "Tarea completada con éxito." << endl;
         }
         
-};
+        void cargarTareas(){
+            ifstream archivo("tareas.txt"); //define que archivo busca el programa para leer
+            if(!archivo.is_open()) return; //si no existe, nada
+
+            string nombre, dias, prioridad, completada;
+
+            while(getline(archivo, nombre, ',')){
+                getline(archivo, dias, ',');
+                getline(archivo, prioridad, ',');
+                getline(archivo, completada, '\n');
+
+                Tarea t(nombre, stoi(dias), stoi(prioridad));
+                if(stoi(completada) == 1){
+                    t.completarTarea();
+                }
+
+                ListaTareas.push_back(t);
+            }
+            archivo.close();
+        }
+
+        void guardarTareas(){
+            ofstream archivo("tareas.txt");
+            if(!archivo.is_open()){
+                cout << "Error al guardar las tareas." << endl;
+                return;
+            }
+
+            for(size_t i = 0; i < ListaTareas.size(); i++){
+                archivo << ListaTareas[i].getNombre() << "," << ListaTareas[i].getDiasRestantes() << "," << ListaTareas[i].getPrioridad() << "," << ListaTareas[i].tareaCompletada() << "\n";
+            }
+            archivo.close();
+            cout << "Datos guardados correctamente." << endl;
+        }
+    };
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);
@@ -198,7 +238,10 @@ int main(){
                 break;
             default:
                 activo = false;
+                break;
         }
     } while(activo);
+
+    g.guardarTareas();
     return 0;
 }
