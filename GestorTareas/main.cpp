@@ -92,13 +92,37 @@ class gestorTareas{
         void agregarTarea(){
             string n;
             int d, p;
-            cout << "\nIngrese el nombre de la tarea: ";
+            
+            cout << "Ingrese el nombre de la tarea: ";
             getline(cin, n);
-            cout << "Ingrese los días restantes: ";
-            cin >> d;
-            cout << "Ingrese la prioridad de la tarea (1-10): ";
-            cin >> p;
-            cin.ignore();
+
+            while(true){
+                cout << "Ingrese los días restantes para completar la tarea: ";
+                cin >> d;
+
+                if(cin.fail() || d < 0){
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Periodo de tiempo no válido. Ingrese un numero mayor o igual que 0." << endl;
+                } else{
+                    break;
+                }
+            }
+
+            while(true){
+                cout << "Ingrese la prioridad de la tarea (1-10): ";
+                cin >> p;
+                
+                if(cin.fail() || p < 1 || p > 10){
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Prioridad no válida. Ingrese un numero del 1 al 10." << endl;
+                } else{
+                    break;
+                }
+            }
+
+            cin.ignore(10000, '\n');
             Tarea t(n, d, p);
             ListaTareas.push_back(t);
         }
@@ -121,23 +145,33 @@ class gestorTareas{
         }
 
         void completarUnaTarea(){
+            if(ListaTareas.empty()){
+                cout << "No hay tareas para completar." << endl;
+                return;
+            }
             int t;
             cout << "¿Qué tarea quieres completar?: ";
             cin >> t;
-            while(t < 0 || t > ListaTareas.size()){
-                cout << "tarea no encontrada. Ingresar de nuevo: ";
-                cin >> t;
+
+            if(cin.fail() || t < 1 ||  t > ListaTareas.size()){
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Indice no válido." << endl;
+                return;
             }
+
             cout << "¿Deseas completar la tarea '" << ListaTareas[t-1].getNombre() << "'?: ";
             int decision;
             cin >> decision;
-            while(decision < 1 || decision > 2){
-                cin >> decision;
+
+            if(cin.fail() || decision != 1){
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Acción cancelada." << endl;
+                return;
             }
-            if(decision == 1){
-                ListaTareas[t-1].completarTarea();
-                cout << "Tarea completada." << endl;
-            }
+            ListaTareas[t-1].completarTarea();
+            cout << "Tarea completada con éxito." << endl;
         }
         
 };
