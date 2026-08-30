@@ -78,14 +78,14 @@ class BaseDeDatos{
             const auto &it = usuarios.find(username);
 
             if(it == usuarios.end()){
-                std::cout << "El usuario no existe.\n";
+                std::cout << "\nEl usuario no existe.\n";
                 return false;
             } else{
                 if(tryPassword == it->second->password){
-                    std::cout << "Autenticación exitosa.\n";
+                    std::cout << "\nAutenticación exitosa.\n";
                     return true;
                 } else{
-                    std::cout << "Contraseña erronea. Fallo en la autenticación.\n";
+                    std::cout << "\nContraseña erronea. Fallo en la autenticación.\n";
                     return false;
                 }
             }
@@ -170,7 +170,7 @@ int main(){
 
     do{
         int opcion, opcion2;
-        std::cout << "Bienvenido al nuevo sistema de base de datos DBC++, elija una de las siguientes opciones:\n1. Registrar nuevo usuario.\n2.Autenticar usuario.\n3. Mostrar perfil de usuario.\n4. Actualizar informacion de usuario.\n5. Eliminar usuario.\n6. Salir.\n\n Elige una opción (1-6):\n>> ";
+        std::cout << "Bienvenido al nuevo sistema de base de datos DBC++, elija una de las siguientes opciones:\n1. Registrar nuevo usuario.\n2. Autenticar usuario.\n3. Mostrar perfil de usuario.\n4. Actualizar informacion de usuario.\n5. Eliminar usuario.\n6. Salir.\n\n Elige una opción (1-6):\n>> ";
 
         std::cin >> opcion;
 
@@ -190,7 +190,7 @@ int main(){
                 std::cin >> calificacion;
                 verificarCalificacion(calificacion);
 
-                db.registrarUsuario(std::move(name), std::move(email), std::move(password), calificacion);
+                db.registrarUsuario(std::move(name), std::move(password), std::move(email), calificacion);
 
                 break;
 
@@ -200,7 +200,7 @@ int main(){
                 std::cout << "Ingrese la contraseña de la cuenta: ";
                 std::cin >> password;
 
-                db.autenticarUsuario(std::move(name), std::move(password));
+                db.autenticarUsuario(name, password);
 
                 break;
 
@@ -208,7 +208,7 @@ int main(){
                 std::cout << "Ingrese el nombre de usuario: ";
                 std::cin >> name;
 
-                db.mostrarPerfil(std::move(name));
+                db.mostrarPerfil(name);
 
                 break;
 
@@ -223,17 +223,17 @@ int main(){
                     case 1:
                         std::cout << "Ingrese el nuevo email: ";
                         std::cin >> email;
-                        db.actualizarEmail(std::move(name), std::move(email));
+                        db.actualizarEmail(name, email);
                         break;
                     case 2:
                         std::cout << "Ingrese la neuva contraseña: ";
                         std::cin >> password;
-                        db.actualizarContraseña(std::move(name), std::move(password));
+                        db.actualizarContraseña(name, password);
                         break;
                     case 3:
                         std::cout << "Ingrese la nueva calificación: ";
                         std::cin >> calificacion;
-                        db.actualizarCalificacion(std::move(name), calificacion);
+                        db.actualizarCalificacion(name, calificacion);
                         break;
                     default:
                         break;
@@ -247,6 +247,7 @@ int main(){
                 db.eliminar(std::move(name));
                 break;
             default: 
+                activo = false;
                 break;
         }
 
