@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <windows.h>
 
 using std::cout;
+using std::cin;
 using std::endl;
 using std::string;
 using std::vector;
@@ -97,28 +99,42 @@ class Mago : public Entidad{
 };
 
 int main() {
-    cout << "--- PRUEBA DEL MOTOR DE ENTIDADES ---\n";
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
 
-    Heroe hero("Jose", 300, 15, 10);
-    vector<Entidad*> enemigos;
+    vector<Entidad*> horda;
+    Heroe heroe("José", 200, 15, 10);
 
-    enemigos.push_back(new Orco("Ragnar", 200, 12));
-    enemigos.push_back(new Mago("Merlin", 180, 10, 50));
+    horda.push_back(new Orco("Ragnar", 100, 10));
+    horda.push_back(new Mago("Merlin", 90, 9, 50));
 
-    for(size_t i = 0; i < enemigos.size(); i++){
-        enemigos[i]->atacar(hero);
+    while(heroe.estaVivo() && !horda.empty()){
+        heroe.atacar(*horda[0]);
+
+        if(!horda[0]->estaVivo()){
+            cout << horda[0]->getNombre() << " ha caido.\n";
+            delete horda[0];
+            horda.erase(horda.begin());
+        }
+
+        for(size_t i = 0; i < horda.size(); i++){
+            horda[i]->atacar(heroe);
+            cout << "\n";
+        }
+        cout << "Presiona enter para continuar..." << endl;
+        cin.get();
     }
     
-    if(hero.estaVivo()){
-        cout << "El heroe " << hero.getNombre() << " esta vivo." << endl;
-    } else{
-        cout << "El heroe ha muerto." << endl;
+    for(Entidad* sobreviente : horda){
+        delete sobreviente;
     }
+    horda.clear();
 
-    for(Entidad *tempPtr : enemigos){
-        delete tempPtr;
+    if(!heroe.estaVivo()){
+        cout << "El heroe murió en combate..." << endl;
+    } else{
+        cout << "El heroe vencio a la horda!" << endl;
     }
-    enemigos.clear();
 
     return 0;
 }
