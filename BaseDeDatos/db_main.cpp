@@ -147,9 +147,110 @@ class BaseDeDatos{
             return false;
         }
 
-        
+        void mostrarPerfil(const std::string &username){
+            const auto &it = usuarios.find(username);
+
+            if(it == usuarios.end()){
+                std::cout << "\nUsuario no encontrado.\n";
+                return;
+            }
+
+            std::cout << "\nUsuario: " << username << "\nEmail: " << it->second->email << "\nContraseña: " << it->second->password << "\nCalificación: " << it->second->calificacion << "\n\n";
+        }
 };
 
 int main(){
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+
+    BaseDeDatos db;
+    bool activo = true;
+
+    std::cout << "\n--- BASE DE DATOS DBC++ ---\n\n";
+
+    do{
+        int opcion, opcion2;
+        std::cout << "Bienvenido al nuevo sistema de base de datos DBC++, elija una de las siguientes opciones:\n1. Registrar nuevo usuario.\n2.Autenticar usuario.\n3. Mostrar perfil de usuario.\n4. Actualizar informacion de usuario.\n5. Eliminar usuario.\n6. Salir.\n\n Elige una opción (1-6):\n>> ";
+
+        std::cin >> opcion;
+
+        std::string name, email, password;
+        int calificacion = 1;
+
+        switch(opcion){
+            case 1:
+                std::cout << "Ingrese el nombre de usuario (no se podrá modificar): ";
+                std::cin >> name;
+                std::cout << "Ingrese el email asociado a la cuenta: ";
+                std::cin >> email;
+                std::cout << "Ingrese la contraseña de la cuenta: ";
+                std::cin >> password;
+                verificarDatos(email, password, calificacion);
+                std::cout << "--- CUENTA CREADA CON ÉXITO ---\nIngrese la calificación (1-100): ";
+                std::cin >> calificacion;
+                verificarCalificacion(calificacion);
+
+                db.registrarUsuario(std::move(name), std::move(email), std::move(password), calificacion);
+
+                break;
+
+            case 2:
+                std::cout << "Ingrese el nombre de usuario: ";
+                std::cin >> name;
+                std::cout << "Ingrese la contraseña de la cuenta: ";
+                std::cin >> password;
+
+                db.autenticarUsuario(std::move(name), std::move(password));
+
+                break;
+
+            case 3:
+                std::cout << "Ingrese el nombre de usuario: ";
+                std::cin >> name;
+
+                db.mostrarPerfil(std::move(name));
+
+                break;
+
+            case 4:
+                std::cout << "Ingrese el nombre de usuario: ";
+                std::cin >> name;
+                std::cout << "Seleccione una de las siguientes opciones:\n1. Cambiar email\n2. Cambiar contraseña\n3. Actualizar calificación\n4. Volver atrás";
+
+                std::cin >> opcion2;
+
+                switch(opcion2){
+                    case 1:
+                        std::cout << "Ingrese el nuevo email: ";
+                        std::cin >> email;
+                        db.actualizarEmail(std::move(name), std::move(email));
+                        break;
+                    case 2:
+                        std::cout << "Ingrese la neuva contraseña: ";
+                        std::cin >> password;
+                        db.actualizarContraseña(std::move(name), std::move(password));
+                        break;
+                    case 3:
+                        std::cout << "Ingrese la nueva calificación: ";
+                        std::cin >> calificacion;
+                        db.actualizarCalificacion(std::move(name), calificacion);
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+
+            case 5:
+                std::cout << "Ingrese el nombre de usuario a eliminar: ";
+                std::cin >> name;
+                db.eliminar(std::move(name));
+                break;
+            default: 
+                break;
+        }
+
+    } while(activo);
+    
     return 0;
 }
