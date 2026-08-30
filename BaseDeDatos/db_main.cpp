@@ -29,6 +29,27 @@ void verificarDatos(std::string &email, std::string &password, int &calificacion
     }
 }
 
+void verificarCalificacion(int &nuevaCalificacion){
+    while(nuevaCalificacion < 1 || nuevaCalificacion > 100){
+        std::cout << "Ingrese una calificación válida:\n>> ";
+        std::cin >> nuevaCalificacion;
+    }
+}
+
+void verificarContraseña(std::string &nuevaContraseña){
+    while(nuevaContraseña == ""){
+        std::cout << "Ingresa una contraseña válida:\n>> ";
+        std::cin >> nuevaContraseña;
+    }
+}
+
+void verificarEmail(std::string &nuevoEmail){
+    while(nuevoEmail == ""){
+        std::cout << "Ingrese un email válido:\n>> ";
+        std::cin >> nuevoEmail;
+    }
+}
+
 class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Perfil>> usuarios;
@@ -53,7 +74,7 @@ class BaseDeDatos{
             return true;
         }
 
-        bool autenticar(std::string &username, std::string &tryPassword){
+        bool autenticarUsuario(const std::string &username, const std::string &tryPassword){
             const auto &it = usuarios.find(username);
 
             if(it == usuarios.end()){
@@ -83,8 +104,51 @@ class BaseDeDatos{
             }
         }
 
+        bool actualizarCalificacion(const std::string &username, int nuevaCalificacion){
+            const auto &it = usuarios.find(username);
 
-    };
+            if(it == usuarios.end()){
+                std::cout << "Usuario no encontrado en la base de datos.\n";
+                return false;
+            }
+
+            verificarCalificacion(nuevaCalificacion);
+            it->second->calificacion = nuevaCalificacion;
+            return true;
+        }
+
+        bool actualizarContraseña(const std::string &username, std::string newPassword){
+            const auto &it = usuarios.find(username);
+
+            if(it != usuarios.end()){
+                verificarContraseña(newPassword);
+                it->second->password = std::move(newPassword);
+                std::cout << "Contraseña cambiada con éxito.\n";
+                return true;
+            } else{
+                std::cout << "Usuario no encontrado.\n";
+            }
+
+            return false;
+        }
+
+        bool actualizarEmail(const std::string &username, std::string newEmail){
+            const auto &it = usuarios.find(username);
+
+            if(it != usuarios.end()){
+                verificarEmail(newEmail);
+                it->second->email = std::move(newEmail);
+                std::cout << "Email cambiado con éxito.\n";
+                return true;
+            } else{
+                std::cout << "Usuario no encontrado.\n";
+            }
+
+            return false;
+        }
+
+        
+};
 
 int main(){
     return 0;
