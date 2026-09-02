@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <windows.h>
 #include <memory>
+#include <fstream>
 
  struct Perfil{
     std::string email, password;
@@ -56,6 +57,34 @@ class BaseDeDatos{
     public:
         BaseDeDatos(){
             usuarios["admin"] = std::make_unique<Perfil>("bmjoseelias@gmail.com", "Dalis26264#", 98);
+        }
+
+        bool guardarEnDisco(){
+            std::ofstream archivo("basedatos.dat", std::ios::binary); //aqui estoy creando un archivo binario, ios binary lo que hace es copiar exactamente los bytes sin alterar
+
+            if(!archivo.is_open()){
+                std::cout << "Error al guardar la información...\n";
+                return false;
+            }
+
+            size_t totalUsuarios = usuarios.size();
+            archivo.write(reinterpret_cast<const char*>(&totalUsuarios), sizeof(totalUsuarios)); //! CRITICO, reinterpret cast, lo que hace es decirle al programa: "ve a la direccion de memoria tal, se que es un size_t, pero miralo como un arreglo de caracteres, dime el byte exacto donde inicia, y cuantos voy a leer", por eso es <&variable> y por eso es sizeof(variable), porque no le interesa el valor, sino los bytes.
+        
+            for(const auto &usuario : usuarios){
+                size_t sizeUsername = usuario.first.size(); //esta linea extra el tamaño en bytes del username
+                archivo.write(reinterpret_cast<const char*>(&sizeUsername), sizeof(sizeUsername)); //Bien, como es un ENTERO (size_t) y no un array de caracteres, se usa reinterpret cast y tambien sizeof
+                archivo.write(usuario.first.c_str(), sizeUsername); //como es un string y no un entero, aqui no ocupo saber cuanto pesa un size_t, aqui ocupo saber cuanto pesa el valor, osea, cuantos bytes tiene el arreglo de caracteres real. 
+
+                size_t sizeEmail = usuario.second->email.size();
+                archivo.write(reinterpret_cast<const char*>(&sizeEmail), sizeof(sizeEmail));
+                archivo.write(usuario.second->email.c_str(), sizeEmail);
+
+                size_t sizePassword = usuario.second->password.size();
+                archivo.write(reinterpret_cast<const char*>(&sizePassword), sizeof(sizePassword));
+                archivo.write(usuario.second->password.c_str(), sizePassword);
+
+                
+            }
         }
 
         bool registrarUsuario(std::string &&username, std::string &&password, std::string &&email, int calificacion){
@@ -247,6 +276,7 @@ int main(){
                 db.eliminar(std::move(name));
                 break;
             default: 
+                db.guardarEnDisco();
                 activo = false;
                 break;
         }
