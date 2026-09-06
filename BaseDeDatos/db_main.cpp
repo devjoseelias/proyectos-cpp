@@ -56,7 +56,9 @@ class BaseDeDatos{
         std::unordered_map<std::string, std::unique_ptr<Perfil>> usuarios;
     public:
         BaseDeDatos(){
-            usuarios["admin"] = std::make_unique<Perfil>("bmjoseelias@gmail.com", "Dalis26264#", 98);
+            if(!leerDelDisco()){
+                usuarios["admin"] = std::make_unique<Perfil>("bmjoseelias@gmail.com", "Dalis26264#", 98);
+            }
         }
 
         bool guardarEnDisco(){
@@ -83,8 +85,47 @@ class BaseDeDatos{
                 archivo.write(reinterpret_cast<const char*>(&sizePassword), sizeof(sizePassword));
                 archivo.write(usuario.second->password.c_str(), sizePassword);
 
-                
+                archivo.write(reinterpret_cast<const char *>(&usuario.second->calificacion), sizeof(usuario.second->calificacion));
             }
+            archivo.close();
+            std::cout << "\nGuardado correctamente en el disco duro.\n";
+            return true;
+        }
+
+        bool leerDelDisco(){
+            std::ifstream archivo("basedatos.dat", std::ios::binary);
+            if(!archivo.is_open()){
+                std::cout << "El archivo no se pudo abrir\n";
+                return false;
+            }
+
+            size_t totalUsuarios;
+            archivo.read(reinterpret_cast<char*>(&totalUsuarios), sizeof(totalUsuarios));
+
+            for(size_t i = 0; i < totalUsuarios; i++){
+                size_t sUsername, sEmail, sPassword; // creo las variables para los tamaños de cada texto
+                int calificacion;
+
+                archivo.read(reinterpret_cast<char*>(&sUsername), sizeof(sUsername)); // paso 1: leo el tamaño en bytes del username que esta en el disco
+                std::string username(sUsername, '\0'); // paso 2: creo un string vacío del tamaño exacto del username
+                archivo.read(&username[0], sUsername); // paso 3: leo e inyecto los caracteres del username 1 por 1
+
+                archivo.read(reinterpret_cast<char*>(&sEmail), sizeof(sEmail)); //NOTA: Uso sizeof, porque es un SIZE_T, me interesan los bytes esos, no tiene un valor aun.
+                std::string email(sEmail, '\0');
+                archivo.read(&email[0], sEmail);
+
+                archivo.read(reinterpret_cast<char*>(&sPassword), sizeof(sPassword));
+                std::string password(sPassword, '\0');
+                archivo.read(&password[0], sPassword);
+
+                archivo.read(reinterpret_cast<char*>(&calificacion), sizeof(calificacion));
+
+                usuarios[std::move(username)] = std::make_unique<Perfil>(std::move(email), std::move(password), std::move(calificacion));
+                //el paso final es crear el perfil ya en el heap, sin esto, no sirve de nada leer del archivo dat
+            }
+            archivo.close();
+            std::cout << "Cargado correctamente desde disco duro. \n\n";
+            return true;
         }
 
         bool registrarUsuario(std::string &&username, std::string &&password, std::string &&email, int calificacion){
