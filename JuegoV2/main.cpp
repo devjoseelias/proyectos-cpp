@@ -82,6 +82,7 @@ void desconectarJugador(int posicion){
     jugadoresConectados.erase(jugadoresConectados.begin() + posicion);
 }
 void hacerDano(int posicion, int dano){
+    std::lock_guard guardia(mtx);
     if(posicion > jugadoresConectados.size() || posicion < 1){
         std::cout << "Indice no válido.\n";
         return;
@@ -90,7 +91,6 @@ void hacerDano(int posicion, int dano){
         dano = 1;
     }
     posicion--;
-    std::lock_guard guardia(mtx);
     jugadoresConectados[posicion]->recibirDano(dano);
 }
 void listarJugadores(){
