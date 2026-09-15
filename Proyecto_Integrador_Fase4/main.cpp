@@ -96,5 +96,8 @@ int main(int argc, char* argv[]){
         std::cin >> calificacion;
         verificar_datos(nombre, registro, calificacion);
         db.registrar_alumno(std::move(nombre), std::move(registro), std::move(calificacion));
+    } else{
+        std::cout << "Comando no válido.\n";
+        pedir_ayuda();
     }
 }
