@@ -20,7 +20,9 @@ class Alumno{
         std::atomic<int> registro;
     public:
         Alumno(std::string &&_nombre, int &&_registro, int &&_calificacion){
-
+            calificacion = _calificacion;
+            nombre = _nombre;
+            registro = _registro;
         }
 };
 
@@ -85,7 +87,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         std::cout << "CLI++ v.0.0.1" << std::endl;
-    } else if(comando == "--insertar"){
+    } else if(comando == "--registar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
         std::cout << "Ingrese el No. de registro del alumno:\n>> ";
