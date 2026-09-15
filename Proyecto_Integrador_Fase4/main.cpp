@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         std::cout << "CLI++ v.0.0.1" << std::endl;
-    } else if(comando == "--registar"){
+    } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
         std::cout << "Ingrese el No. de registro del alumno:\n>> ";
