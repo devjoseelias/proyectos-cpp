@@ -64,10 +64,21 @@ class BaseDeDatos{
 
 
 void pedir_ayuda(){
-    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--insertar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [ver]\n8. [--apagar]";
+    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--registrar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [ver]\n8. [--apagar]";
 }
 void verificar_datos(std::string &nombre, int &registro, int &calificacion){
-
+    while(nombre == ""){
+        std::cout << "Ingresa un nombre valido:\n>> ";
+        std::getline(std::cin, nombre);
+    }
+    while(registro <= 0){
+        std::cout << "Ingresa un No. de registro valido:\n>> ";
+        std::cin >> registro;
+    }
+    while(calificacion < 0){
+        std::cout << "Ingresa una calificacion valida:\n>> ";
+        std::cin >> calificacion;
+    }
 }
 
 int main(int argc, char* argv[]){
