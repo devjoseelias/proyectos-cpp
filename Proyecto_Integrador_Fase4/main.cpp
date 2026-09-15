@@ -24,6 +24,9 @@ class Alumno{
             nombre = _nombre;
             registro = _registro;
         }
+        int get_registro(){
+            return registro;
+        }
 };
 
 class BaseDeDatos{
@@ -58,7 +61,22 @@ class BaseDeDatos{
             return true;
         }       
 
+        bool actualizar_alumno(const std::string &nombre_usuario){
+            const auto &vf = alumnos_registrados.find(nombre_usuario); // busco si el nombre de usuario existe
+            if(vf == alumnos_registrados.end()){
+                std::cout << "El nombre de usuario proporcionado no existe.\n";
+                return false;
+            }
+            
+            int registroTemp;
+            std::cout << "Ingresa tu registro para verificar tu identidad:\n>> ";
+            std::cin >> registroTemp;
 
+            if(vf->second->get_registro() != registroTemp){
+                std::cout << "El registro no coincide, operacion denegada.\n";
+                return false; // aqui me quede. El paso siguiente es terminar la logica para actualizar la informacion del alumno. 
+            }
+        }
     };
 
 
