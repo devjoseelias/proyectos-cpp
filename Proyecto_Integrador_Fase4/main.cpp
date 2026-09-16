@@ -27,7 +27,35 @@ class Alumno{
         int get_registro(){
             return registro;
         }
-};
+        std::string get_nombre(){
+            return nombre;
+        }
+        int get_calificacion(){
+            return calificacion;
+        }
+
+        bool set_calificacion(int _calificacion){
+            if(_calificacion < 1){
+                return false;
+            }
+            calificacion = _calificacion;
+            return true;
+        }
+        bool set_registro(int _registro){
+            if(_registro <= 0){
+                return false;
+            }
+            registro = _registro;
+            return true;
+        }
+        bool set_nombre(std::string _nombre){
+            if(nombre == ""){
+                return false;
+            }
+            nombre = _nombre;
+            return true;
+        }
+};  
 
 class BaseDeDatos{
     private:
@@ -61,21 +89,72 @@ class BaseDeDatos{
             return true;
         }       
 
-        bool actualizar_alumno(const std::string &nombre_usuario){
+        bool actualizar_alumno(const std::string &nombre_usuario, const std::string &info){
             const auto &vf = alumnos_registrados.find(nombre_usuario); // busco si el nombre de usuario existe
-            if(vf == alumnos_registrados.end()){
+            if(vf == alumnos_registrados.end()){ // SI el usuario con el nombre no  existe
                 std::cout << "El nombre de usuario proporcionado no existe.\n";
-                return false;
+                return false; //niego la operacion
             }
             
             int registroTemp;
-            std::cout << "Ingresa tu registro para verificar tu identidad:\n>> ";
+            std::cout << "Ingresa tu registro actual para verificar tu identidad:\n>> ";
             std::cin >> registroTemp;
 
-            if(vf->second->get_registro() != registroTemp){
+            if(vf->second->get_registro() != registroTemp){ //Si el registro ingresado no coincide
                 std::cout << "El registro no coincide, operacion denegada.\n";
-                return false; // aqui me quede. El paso siguiente es terminar la logica para actualizar la informacion del alumno. 
+                return false; // niego la operacion 
             }
+
+            std::cout << "Aprobado.\n";
+            if(info == "nombre"){
+                std::string nombre_actual = vf->second->get_nombre();
+                std::string nuevo_nombre = "";
+                while(nuevo_nombre == "" || nuevo_nombre == nombre_actual){
+                    std::cout << "\nIngrese el nuevo nombre:\n>> ";
+                    std::getline(std::cin, nuevo_nombre);
+                }
+                if(vf->second->set_nombre(nuevo_nombre)){
+                    std::cout << "\nExito. Nuevo nombre establecido.\n";
+                    return true;
+                } else{
+                    std::cout << "\nError al establecer nuevo nombre.\n";
+                    return false;
+                }
+
+            } else if(info == "registro"){
+                int registro_actual = vf->second->get_registro();
+                int nuevo_registro = 0;
+                while(nuevo_registro <= 0 || nuevo_registro == registro_actual){
+                    std::cout << "\nIngrese el nuevo No. de registro:\n>> ";
+                    std::cin >> nuevo_registro;
+                }
+                if(vf->second->set_registro(nuevo_registro)){
+                    std::cout << "\nExito. Nuevo registro establecido.\n";
+                    return true;
+                } else{
+                    std::cout << "\nError al actualizar el registro.\n";
+                    return false;
+                }
+
+            } else if(info == "calificacion"){
+                int calificacion_actual = vf->second->get_calificacion();
+                int nueva_calificacion = 0;
+                while(nueva_calificacion == 0 || nueva_calificacion == calificacion_actual){
+                    std::cout << "\nIngrese la nueva calificacion:\n>> ";
+                    std::cin >> nueva_calificacion;
+                }
+                if(vf->second->set_calificacion(nueva_calificacion)){
+                    std::cout << "\nExito. Nueva calificacion establecida.\n";
+                    return true;
+                } else{
+                    std::cout << "\nError al establecer la nueva calificacion.\n";
+                    return false;
+                }
+            } else{
+                std::cout << "\nEl argumento '" << info << "' no es valido. Los argumentos validos para [--actualizar] son:\n 1. [--actualizar nombre]\n2. [--actualizar registro]\n3. [--actualizar calificacion]\n";
+                return false;
+            }
+            return false;
         }
     };
 
@@ -125,8 +204,21 @@ int main(int argc, char* argv[]){
         std::cin >> calificacion;
         verificar_datos(nombre, registro, calificacion);
         db.registrar_alumno(std::move(nombre), std::move(registro), std::move(calificacion));
+    } else if(comando == "--actualizar"){
+        if(argc < 3){
+            std::cout << "Faltan argumentos para la llamada a [--actualizar]\nIntenta con:\n1. [--actualizar nombre]\n2. [--actualizar registro]\n3. [--actualizar calificacion]\n";
+            return 1;
+        }
+        std::string informacion_a_modificar = argv[2];
+        std::string nombre_usuario;
+        std::cout << "\nIngrese el nombre de usuario:\n>> ";
+        std::cin >> nombre_usuario;
+
+        db.actualizar_alumno(nombre_usuario, informacion_a_modificar);
     } else{
         std::cout << "Comando no valido.\n";
         pedir_ayuda();
     }
+
+    return 0;
 }
