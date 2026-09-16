@@ -6,6 +6,7 @@
 #include <atomic>
 #include <chrono>
 #include <fstream>
+#include <filesystem>
 #include <ctime>
 #include <vector>
 #include <unordered_map>
@@ -159,6 +160,7 @@ class BaseDeDatos{
         }
         
         bool consultar_alumno(const std::string &nombre_usuario){ //Esta es la funcion CONSULTAR
+            std::lock_guard guardia(mtx);
             const auto &vf = alumnos_registrados.find(nombre_usuario); //paso 1: buscar el nombre nos proporcionan
             if(vf == alumnos_registrados.end()){ //paso 2: si no existe
                 std::cout << "\nNombre de usuario no valido. Reintenta o registra al usuario.\n";
@@ -168,7 +170,20 @@ class BaseDeDatos{
             return true;
         }
     
-
+        bool guardar_en_disco(){
+            while(motor_encendido){
+                std::this_thread::sleep_for(std::chrono::seconds(3)); //paso 1: dormimos 3 segundos mientras el motor este activo
+                std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
+                if(!arch.is_open()){ //si no esta abierto
+                    std::cout << "Error al abrir el archivo de escritura.\n";
+                    return false;
+                }
+                std::lock_guard guardia(mtx); //bloque para evitar data races
+                size_t total_alumnos = alumnos_registrados.size(); //leo el tamaño de mi hashmap
+                arch.write(reinterpret_cast<const char*>(&total_alumnos), sizeof(total_alumnos));  //escribo el tamaño de mi hashmap (se usa reinterpret cast pq es un size_t, y uso sizeof() por lo mismo, que pesa 8bytes)
+                
+            }
+        }
     };
 
 
@@ -235,6 +250,7 @@ int main(int argc, char* argv[]){
         db.consultar_alumno(argv[2]);
     } else{
         std::cout << "Comando no valido.\n";
+        motor_encendido = false;
         pedir_ayuda();
     }
 
