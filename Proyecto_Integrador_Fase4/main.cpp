@@ -168,7 +168,7 @@ class BaseDeDatos{
             return true;
         }
     
-        
+
     };
 
 
@@ -227,6 +227,12 @@ int main(int argc, char* argv[]){
         std::cin >> nombre_usuario;
 
         db.actualizar_alumno(nombre_usuario, informacion_a_modificar);
+    } else if(comando == "--consultar"){
+        if(argc < 3){
+            std::cout << "Faltan argmentos para la llamada a [--consultar]. Prueba con [--consultar nombre_usuario]\n";
+            return 1;
+        }
+        db.consultar_alumno(argv[2]);
     } else{
         std::cout << "Comando no valido.\n";
         pedir_ayuda();
