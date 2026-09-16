@@ -89,7 +89,8 @@ class BaseDeDatos{
             return true;
         }       
 
-        bool actualizar_alumno(const std::string &nombre_usuario, const std::string &info){
+        bool actualizar_alumno(const std::string &nombre_usuario, const std::string &info){ //Esta es la funcion ACTUALIZAR
+            std::lock_guard guardia(mtx);
             const auto &vf = alumnos_registrados.find(nombre_usuario); // busco si el nombre de usuario existe
             if(vf == alumnos_registrados.end()){ // SI el usuario con el nombre no  existe
                 std::cout << "El nombre de usuario proporcionado no existe.\n";
@@ -156,8 +157,19 @@ class BaseDeDatos{
             }
             return false;
         }
+        
+        bool consultar_alumno(const std::string &nombre_usuario){ //Esta es la funcion CONSULTAR
+            const auto &vf = alumnos_registrados.find(nombre_usuario); //paso 1: buscar el nombre nos proporcionan
+            if(vf == alumnos_registrados.end()){ //paso 2: si no existe
+                std::cout << "\nNombre de usuario no valido. Reintenta o registra al usuario.\n";
+                return false;
+            }
+            std::cout << "\nLos datos del alumno son:\n1. Nombre completo: " << vf->second->get_nombre() << "\n2. Calificacion: " << vf->second->get_calificacion() << "\nEl registro no se puede proporcionar, dado que es informacion privada y requerida para otras operaciones.\n";
+            return true;
+        }
+    
+        
     };
-
 
 
 void pedir_ayuda(){
