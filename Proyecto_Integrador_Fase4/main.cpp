@@ -171,8 +171,8 @@ class BaseDeDatos{
         }
     
         bool guardar_en_disco(){
-            while(motor_encendido){
-                std::this_thread::sleep_for(std::chrono::seconds(3)); //paso 1: dormimos 3 segundos mientras el motor este activo
+            while(motor_encendido == true){
+                std::this_thread::sleep_for(std::chrono::seconds(2)); //paso 1: dormimos 3 segundos mientras el motor este activo
                 std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
                 if(!arch.is_open()){ //si no esta abierto
                     std::cout << "Error al abrir el archivo de escritura.\n";
@@ -190,7 +190,7 @@ class BaseDeDatos{
                     //paso 2: escribir el nombre
                     size_t tamano_nombre = alumno.second->get_nombre().size(); //calculo el tamaño del username
                     arch.write(reinterpret_cast<const char*>(&tamano_nombre), sizeof(tamano_nombre));//escribo el tamaño del nombre
-                    arch.write(alumno.second->get_nombre().c_str(), sizeof(tamano_nombre));
+                    arch.write(alumno.second->get_nombre().c_str(), tamano_nombre);
 
                     //paso 3: escribir el registro
                     //aqui no voy a ocupar el size t porque estoy tratando con un entero
@@ -234,7 +234,7 @@ int main(int argc, char* argv[]){
     }
 
     BaseDeDatos db;
-    std::thread guardado_sp(BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
+    std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
     guardado_sp.detach();
     std::string comando = argv[1];
 
@@ -277,6 +277,7 @@ int main(int argc, char* argv[]){
         motor_encendido = false;
         pedir_ayuda();
     }
-    guardado_sp.join();
+    std::cout << "\n[ESPERA 5 SEGUNDOS PARA REALIZAR EL GUARDADO ANTES DE SALIR]\n";
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     return 0;
 }
