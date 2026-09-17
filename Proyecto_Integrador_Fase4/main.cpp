@@ -182,7 +182,29 @@ class BaseDeDatos{
                 size_t total_alumnos = alumnos_registrados.size(); //leo el tamaño de mi hashmap
                 arch.write(reinterpret_cast<const char*>(&total_alumnos), sizeof(total_alumnos));  //escribo el tamaño de mi hashmap (se usa reinterpret cast pq es un size_t, y uso sizeof() por lo mismo, que pesa 8bytes)
                 
+                for(const auto &alumno : alumnos_registrados){
+                    size_t tamano_nombre_usuario = alumno.first.size(); //tomo el TAMAÑO del username
+                    arch.write(reinterpret_cast<const char*>(&tamano_nombre_usuario), sizeof(tamano_nombre_usuario));//Escribo el TAMAÑO del username
+                    arch.write(alumno.first.c_str(), tamano_nombre_usuario);//Escribo el USERNAME
+
+                    //paso 2: escribir el nombre
+                    size_t tamano_nombre = alumno.second->get_nombre().size(); //calculo el tamaño del username
+                    arch.write(reinterpret_cast<const char*>(&tamano_nombre), sizeof(tamano_nombre));//escribo el tamaño del nombre
+                    arch.write(alumno.second->get_nombre().c_str(), sizeof(tamano_nombre));
+
+                    //paso 3: escribir el registro
+                    //aqui no voy a ocupar el size t porque estoy tratando con un entero
+                    size_t rTemp = alumno.second->get_registro();
+                    arch.write(reinterpret_cast<const char*>(&rTemp), sizeof(rTemp));
+                    //paso 4: escribir la calificacion
+                    size_t cTemp = alumno.second->get_calificacion();
+                    arch.write(reinterpret_cast<const char*>(&cTemp), sizeof(cTemp));
+                }
+                arch.close();
+                std::cout << "\nGuardado correctamente.\n";
+                return true;
             }
+            return true;
         }
     };
 
@@ -212,6 +234,8 @@ int main(int argc, char* argv[]){
     }
 
     BaseDeDatos db;
+    std::thread guardado_sp(BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
+    guardado_sp.detach();
     std::string comando = argv[1];
 
     std::string nombre;
@@ -253,6 +277,6 @@ int main(int argc, char* argv[]){
         motor_encendido = false;
         pedir_ayuda();
     }
-
+    guardado_sp.join();
     return 0;
 }
