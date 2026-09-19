@@ -178,7 +178,7 @@ class BaseDeDatos{
             return true;
         }
     
-        bool guardar_en_disco(){
+        bool guardar_en_disco(){ // esta funcion se hace en segundo plano, GUARDAR
             while(motor_encendido == true){
                 std::this_thread::sleep_for(std::chrono::seconds(5)); //paso 1: dormimos 3 segundos mientras el motor este activo
                 std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
@@ -216,7 +216,7 @@ class BaseDeDatos{
             return true;
         }
 
-        bool leer_del_disco(){
+        bool leer_del_disco(){ // esta funcion reconstruye la base de datos
             std::ifstream arch("baseDatos.dat", std::ios::binary);
             if(!arch.is_open()){
                 std::cout << "Error al abrir el archivo de lectura.\n";
@@ -249,7 +249,7 @@ class BaseDeDatos{
             return true;
         }
 
-        bool forzar_guardado(){
+        bool forzar_guardado(){ // esta funcion es de FORZAR el guardado
             std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
                 if(!arch.is_open()){ //si no esta abierto
                     std::cout << "Error al abrir el archivo de escritura.\n";
@@ -284,7 +284,7 @@ class BaseDeDatos{
             return true;
         }
     
-        void esta_vacia(){
+        void esta_vacia(){ // esta funcion me permite saber si esta vacia o no mi base
             if(alumnos_registrados.empty()){
                 std::cout << "La base de datos esta vacia.\n";
             } else{
@@ -296,7 +296,7 @@ class BaseDeDatos{
 
 
 void pedir_ayuda(){
-    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--registrar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [ver]\n8. [--apagar]";
+    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--registrar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [ver]\n8. [?vacia]\n9. [--apagar]";
 }
 void verificar_datos(std::string &nombre, int &registro, int &calificacion){
     while(nombre == ""){
@@ -338,7 +338,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         motor_encendido = false;
-        std::cout << "CLI++ v.0.0.1" << std::endl;
+        std::cout << "CLI++ v.1.2.0" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
