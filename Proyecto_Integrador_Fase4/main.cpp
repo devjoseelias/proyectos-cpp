@@ -216,6 +216,8 @@ class BaseDeDatos{
             return true;
         }
 
+        bool alertas_txt(); // PENDIENTE
+
         bool leer_del_disco(){ // esta funcion reconstruye la base de datos
             std::ifstream arch("baseDatos.dat", std::ios::binary);
             if(!arch.is_open()){
@@ -292,6 +294,9 @@ class BaseDeDatos{
             }
         }
 
+        bool ver_metricas(); // PENDIENTE
+
+        bool eliminar_archivo(); // PENDIENTE
 };
 
 
