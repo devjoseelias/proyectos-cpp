@@ -63,7 +63,7 @@ class BaseDeDatos{
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
     public:
         bool registrar_alumno(std::string &&nombre_alumno, int &&registro, int &&calificacion){ // Esta es la funcion de INSERTAR
-            std::lock_guard guardia(mtx); //esto es lo primero, que es asegurar que nada ni nadie más modifique mis usuarios
+            std::lock_guard<std::mutex> guardia(mtx); //esto es lo primero, que es asegurar que nada ni nadie más modifique mis usuarios
 
             //paso 1: Crear la variable del nombre de usuario (username) de forma temporal
             std::string nombre_usuario_temp = "usuario";
@@ -91,7 +91,7 @@ class BaseDeDatos{
         }       
 
         bool actualizar_alumno(const std::string &nombre_usuario, const std::string &info){ //Esta es la funcion ACTUALIZAR
-            std::lock_guard guardia(mtx);
+            std::lock_guard<std::mutex> guardia(mtx);
             const auto &vf = alumnos_registrados.find(nombre_usuario); // busco si el nombre de usuario existe
             if(vf == alumnos_registrados.end()){ // SI el usuario con el nombre no  existe
                 std::cout << "El nombre de usuario proporcionado no existe.\n";
@@ -160,7 +160,7 @@ class BaseDeDatos{
         }
         
         bool consultar_alumno(const std::string &nombre_usuario){ //Esta es la funcion CONSULTAR
-            std::lock_guard guardia(mtx);
+            std::lock_guard<std::mutex> guardia(mtx);
             const auto &vf = alumnos_registrados.find(nombre_usuario); //paso 1: buscar el nombre nos proporcionan
             if(vf == alumnos_registrados.end()){ //paso 2: si no existe
                 std::cout << "\nNombre de usuario no valido. Reintenta o registra al usuario.\n";
@@ -172,13 +172,14 @@ class BaseDeDatos{
     
         bool guardar_en_disco(){
             while(motor_encendido == true){
-                std::this_thread::sleep_for(std::chrono::seconds(2)); //paso 1: dormimos 3 segundos mientras el motor este activo
+                std::this_thread::sleep_for(std::chrono::seconds(5)); //paso 1: dormimos 3 segundos mientras el motor este activo
                 std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
                 if(!arch.is_open()){ //si no esta abierto
                     std::cout << "Error al abrir el archivo de escritura.\n";
                     return false;
                 }
-                std::lock_guard guardia(mtx); //bloque para evitar data races
+                {
+                std::lock_guard<std::mutex> guardia(mtx); //bloque para evitar data races
                 size_t total_alumnos = alumnos_registrados.size(); //leo el tamaño de mi hashmap
                 arch.write(reinterpret_cast<const char*>(&total_alumnos), sizeof(total_alumnos));  //escribo el tamaño de mi hashmap (se usa reinterpret cast pq es un size_t, y uso sizeof() por lo mismo, que pesa 8bytes)
                 
@@ -200,9 +201,9 @@ class BaseDeDatos{
                     size_t cTemp = alumno.second->get_calificacion();
                     arch.write(reinterpret_cast<const char*>(&cTemp), sizeof(cTemp));
                 }
+                }
                 arch.close();
                 std::cout << "\nGuardado correctamente.\n";
-                return true;
             }
             return true;
         }
@@ -235,7 +236,6 @@ int main(int argc, char* argv[]){
 
     BaseDeDatos db;
     std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
-    guardado_sp.detach();
     std::string comando = argv[1];
 
     std::string nombre;
@@ -243,8 +243,10 @@ int main(int argc, char* argv[]){
     int calificacion;
 
     if(comando == "--ayuda"){
+        motor_encendido = false;
         pedir_ayuda();
     } else if(comando == "--version"){
+        motor_encendido = false;
         std::cout << "CLI++ v.0.0.1" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
@@ -277,7 +279,7 @@ int main(int argc, char* argv[]){
         motor_encendido = false;
         pedir_ayuda();
     }
-    std::cout << "\n[ESPERA 5 SEGUNDOS PARA REALIZAR EL GUARDADO ANTES DE SALIR]\n";
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    motor_encendido = false;
+    guardado_sp.join();
     return 0;
 }
