@@ -62,6 +62,14 @@ class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
     public:
+        BaseDeDatos(std::string datos){
+            if(datos == "si"){
+                if(!leer_del_disco()){
+                    alumnos_registrados["admin"] = std::make_unique<Alumno>("Profesor", 012345, 100);
+                }
+            }
+        }
+
         bool registrar_alumno(std::string &&nombre_alumno, int &&registro, int &&calificacion){ // Esta es la funcion de INSERTAR
             std::lock_guard<std::mutex> guardia(mtx); //esto es lo primero, que es asegurar que nada ni nadie más modifique mis usuarios
 
@@ -207,7 +215,84 @@ class BaseDeDatos{
             }
             return true;
         }
-    };
+
+        bool leer_del_disco(){
+            std::ifstream arch("baseDatos.dat", std::ios::binary);
+            if(!arch.is_open()){
+                std::cout << "Error al abrir el archivo de lectura.\n";
+                return false;
+            }
+            size_t cantidad_alumnos;
+            arch.read(reinterpret_cast<char*>(&cantidad_alumnos), sizeof(cantidad_alumnos));
+
+            for(size_t i = 0; i < cantidad_alumnos; i++){
+                size_t registro, calificacion, sizeUsuario, sizeNombre;//creo una variable para leerlo
+
+                arch.read(reinterpret_cast<char*>(&sizeUsuario), sizeof(sizeUsuario)); //leo el tamaño de caracteres
+                std::string usuario(sizeUsuario, '\0'); //creo un string vacio con el numero de caracteres del usuario
+                arch.read(&usuario[0], sizeUsuario); //leo e inyecto a mi variable el usuario real
+
+                arch.read(reinterpret_cast<char*>(&sizeNombre), sizeof(sizeNombre));
+                std::string nombre(sizeNombre, '\0');
+                arch.read(&nombre[0], sizeNombre);
+
+                arch.read(reinterpret_cast<char*>(&registro), sizeof(registro));
+                
+                arch.read(reinterpret_cast<char*>(&calificacion), sizeof(calificacion));
+
+                alumnos_registrados[std::move(usuario)] = std::make_unique<Alumno>(std::move(nombre), std::move(registro), std::move(calificacion));
+            }
+            arch.close();   
+            if(alumnos_registrados.empty()){
+                return false;
+            }
+            return true;
+        }
+
+        bool forzar_guardado(){
+            std::ofstream arch("baseDatos.dat", std::ios::binary); //declaramos el archivo
+                if(!arch.is_open()){ //si no esta abierto
+                    std::cout << "Error al abrir el archivo de escritura.\n";
+                    return false;
+                }
+                {
+                std::lock_guard<std::mutex> guardia(mtx); //bloque para evitar data races
+                size_t total_alumnos = alumnos_registrados.size(); //leo el tamaño de mi hashmap
+                arch.write(reinterpret_cast<const char*>(&total_alumnos), sizeof(total_alumnos));  //escribo el tamaño de mi hashmap (se usa reinterpret cast pq es un size_t, y uso sizeof() por lo mismo, que pesa 8bytes)
+                
+                for(const auto &alumno : alumnos_registrados){
+                    size_t tamano_nombre_usuario = alumno.first.size(); //tomo el TAMAÑO del username
+                    arch.write(reinterpret_cast<const char*>(&tamano_nombre_usuario), sizeof(tamano_nombre_usuario));//Escribo el TAMAÑO del username
+                    arch.write(alumno.first.c_str(), tamano_nombre_usuario);//Escribo el USERNAME
+
+                    //paso 2: escribir el nombre
+                    size_t tamano_nombre = alumno.second->get_nombre().size(); //calculo el tamaño del username
+                    arch.write(reinterpret_cast<const char*>(&tamano_nombre), sizeof(tamano_nombre));//escribo el tamaño del nombre
+                    arch.write(alumno.second->get_nombre().c_str(), tamano_nombre);
+
+                    //paso 3: escribir el registro
+                    //aqui no voy a ocupar el size t porque estoy tratando con un entero
+                    size_t rTemp = alumno.second->get_registro();
+                    arch.write(reinterpret_cast<const char*>(&rTemp), sizeof(rTemp));
+                    //paso 4: escribir la calificacion
+                    size_t cTemp = alumno.second->get_calificacion();
+                    arch.write(reinterpret_cast<const char*>(&cTemp), sizeof(cTemp));
+                }
+                }
+                arch.close();
+                std::cout << "\nGuardado correctamente.\n";
+            return true;
+        }
+    
+        void esta_vacia(){
+            if(alumnos_registrados.empty()){
+                std::cout << "La base de datos esta vacia.\n";
+            } else{
+                std::cout << "La base de datos no esta vacia.\n";
+            }
+        }
+
+};
 
 
 void pedir_ayuda(){
@@ -233,8 +318,14 @@ int main(int argc, char* argv[]){
         std::cerr << "Faltan argumentos.\n";
         pedir_ayuda();
     }
+    std::string datos_adicionales;
+    if(argv[1] == "?vacia"){
+        datos_adicionales = "si";
+    } else{
+        datos_adicionales = "no";
+    }
 
-    BaseDeDatos db;
+    BaseDeDatos db(datos_adicionales);
     std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
     std::string comando = argv[1];
 
@@ -274,6 +365,12 @@ int main(int argc, char* argv[]){
             return 1;
         }
         db.consultar_alumno(argv[2]);
+    } else if(comando == "--forzar"){
+        motor_encendido = false;
+        db.forzar_guardado();
+    } else if(comando == "?vacia"){
+        motor_encendido = false;
+        db.esta_vacia();
     } else{
         std::cout << "Comando no valido.\n";
         motor_encendido = false;
