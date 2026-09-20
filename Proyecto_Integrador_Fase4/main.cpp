@@ -62,13 +62,6 @@ class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
     public:
-        BaseDeDatos(std::string datos){
-            if(datos == "si"){
-                if(!leer_del_disco()){
-                    alumnos_registrados["admin"] = std::make_unique<Alumno>("Profesor", 012345, 100);
-                }
-            }
-        }
 
         bool registrar_alumno(std::string &&nombre_alumno, int &&registro, int &&calificacion){ // Esta es la funcion de INSERTAR
             std::lock_guard<std::mutex> guardia(mtx); //esto es lo primero, que es asegurar que nada ni nadie más modifique mis usuarios
@@ -224,6 +217,7 @@ class BaseDeDatos{
                 std::cout << "Error al abrir el archivo de lectura.\n";
                 return false;
             }
+            std::cout << "Archivo de lectura abierto con exito.\n";
             size_t cantidad_alumnos;
             arch.read(reinterpret_cast<char*>(&cantidad_alumnos), sizeof(cantidad_alumnos));
 
@@ -286,22 +280,34 @@ class BaseDeDatos{
             return true;
         }
     
-        void esta_vacia(){ // esta funcion me permite saber si esta vacia o no mi base
+        bool esta_vacia(){ // esta funcion me permite saber si esta vacia o no mi base
             if(alumnos_registrados.empty()){
                 std::cout << "La base de datos esta vacia.\n";
+                return true;
             } else{
                 std::cout << "La base de datos no esta vacia.\n";
+                return false;
             }
         }
 
-        bool ver_metricas(); // PENDIENTE
+        bool ver_metricas(){
+            std::filesystem::path rutaArchivo("baseDatos.dat");
+            size_t peso = std::filesystem::file_size(rutaArchivo);
+            std::string prefijo = "Bytes";
+            if(peso > 1024){
+                peso /= 1000;
+                prefijo = "kB";
+            }
+            std::cout << "El peso del archivo es de " << peso << prefijo << "\n";
+            return true;
+        }
 
         bool eliminar_archivo(); // PENDIENTE
 };
 
 
 void pedir_ayuda(){
-    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--registrar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [ver]\n8. [?vacia]\n9. [--apagar]";
+    std::cout << "Los comandos disponibles son:\n1. [--ayuda]\n2. [--version]\n3. [--registrar]\n4. [--actualizar]\n5. [--consultar]\n6. [--forzar]\n7. [--metricas]\n8. [?vacia]\n9. [--eliminar]";
 }
 void verificar_datos(std::string &nombre, int &registro, int &calificacion){
     while(nombre == ""){
@@ -330,7 +336,9 @@ int main(int argc, char* argv[]){
         datos_adicionales = "no";
     }
 
-    BaseDeDatos db(datos_adicionales);
+    BaseDeDatos db;
+    std::thread cargar_datos(&BaseDeDatos::leer_del_disco, &db);
+    cargar_datos.join();
     std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
     std::string comando = argv[1];
 
@@ -343,7 +351,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         motor_encendido = false;
-        std::cout << "CLI++ v.1.2.0" << std::endl;
+        std::cout << "CLI++ v.1.3.1" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
@@ -365,6 +373,7 @@ int main(int argc, char* argv[]){
 
         db.actualizar_alumno(nombre_usuario, informacion_a_modificar);
     } else if(comando == "--consultar"){
+        motor_encendido = false;
         if(argc < 3){
             std::cout << "Faltan argmentos para la llamada a [--consultar]. Prueba con [--consultar nombre_usuario]\n";
             return 1;
@@ -376,6 +385,9 @@ int main(int argc, char* argv[]){
     } else if(comando == "?vacia"){
         motor_encendido = false;
         db.esta_vacia();
+    } else if(comando == "--metricas"){
+        motor_encendido = false;
+        db.ver_metricas();
     } else{
         std::cout << "Comando no valido.\n";
         motor_encendido = false;
