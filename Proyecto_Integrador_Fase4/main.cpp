@@ -293,7 +293,7 @@ class BaseDeDatos{
         bool ver_metricas(){
             std::filesystem::path rutaArchivo("baseDatos.dat");
             size_t peso = std::filesystem::file_size(rutaArchivo);
-            std::string prefijo = "Bytes";
+            std::string prefijo = " Bytes";
             if(peso > 1024){
                 peso /= 1000;
                 prefijo = "kB";
@@ -351,7 +351,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         motor_encendido = false;
-        std::cout << "CLI++ v.1.3.1" << std::endl;
+        std::cout << "CLI++ v.1.3.2" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
