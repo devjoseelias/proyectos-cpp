@@ -302,7 +302,23 @@ class BaseDeDatos{
             return true;
         }
 
-        bool eliminar_archivo(); // PENDIENTE
+        bool eliminar_archivo(){
+            std::filesystem::path rutaArchivo("baseDatos.dat");
+            if(std::filesystem::exists(rutaArchivo)){
+                if(std::filesystem::remove(rutaArchivo)){
+                    std::cout << "Archivo eliminado con exito.\n";
+                    return true;
+                } else{
+                    std::cout << "No se pudo eliminar el archivo.\n";
+                    return false;
+                }
+            } else{
+                std::cout << "El archivo no existe.\n";
+                return false;
+            }
+            return false;
+        }
+
 };
 
 
@@ -351,7 +367,7 @@ int main(int argc, char* argv[]){
         pedir_ayuda();
     } else if(comando == "--version"){
         motor_encendido = false;
-        std::cout << "CLI++ v.1.3.2" << std::endl;
+        std::cout << "CLI++ v.1.4.0" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
@@ -388,6 +404,16 @@ int main(int argc, char* argv[]){
     } else if(comando == "--metricas"){
         motor_encendido = false;
         db.ver_metricas();
+    } else if(comando == "--eliminar"){
+        motor_encendido = false;
+        std::string decision;
+        std::cout << "Confirmas que quieres eliminar la base de datos? ('si'/'no'):\n>> ";
+        std::cin >> decision;
+        if(decision == "si"){
+            db.eliminar_archivo();
+        } else{
+            std::cout << "Cancelando..\n";
+        }
     } else{
         std::cout << "Comando no valido.\n";
         motor_encendido = false;
