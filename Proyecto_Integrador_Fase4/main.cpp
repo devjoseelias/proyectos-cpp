@@ -58,9 +58,61 @@ class Alumno{
         }
 };  
 
+class listaAlertas{
+    private:
+        std::vector<std::string> lista;
+        std::mutex amtx;
+        const std::string ruta = "registros.txt";
+    public:
+        listaAlertas(){
+            if(!cargar_historial()){
+                std::lock_guard<std::mutex> guardia(amtx);
+                lista.push_back("[ATENCION]. Sistema de alertas iniciado por primera vez. Registro comienza aqui.\n");
+            }
+            time_t now = time(nullptr);
+            std::string frase = ctime(&now);
+            std::lock_guard<std::mutex> guardia(amtx);
+            lista.push_back("Registro iniciado. " + frase);
+            std::cout << "Exito.\n";
+        }
+        
+        bool cargar_historial(){
+            return true; // PENDIENTE
+        }
+
+        bool guardar_alertas(){
+            std::ofstream arch(ruta, std::ios::out);
+            if(!arch.is_open()){
+                std::cerr << "Error, no se pudo crear/abrir el archivo.";
+                return false;
+            }
+
+            if(std::filesystem::is_empty(ruta)){
+                std::lock_guard<std::mutex> guardia(amtx);
+                for(size_t i = 0; i < lista.size(); i++){
+                    arch << lista[i] << "\n";
+                }  
+            }
+
+            while(motor_encendido){
+                size_t tamano_inicial = lista.size();
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+                if(lista.size() < tamano_inicial){
+                    std::lock_guard<std::mutex> guardia(amtx);
+                    size_t ultimo_indice = lista.size() - 1;
+                    arch.seekp(0, std::ios::end);
+                    arch << lista[ultimo_indice];
+                }
+            }
+            arch.close();
+            return true;
+        }
+};
+
 class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
+        listaAlertas lA;
     public:
 
         bool registrar_alumno(std::string &&nombre_alumno, int &&registro, int &&calificacion){ // Esta es la funcion de INSERTAR
@@ -209,7 +261,9 @@ class BaseDeDatos{
             return true;
         }
 
-        bool alertas_txt(); // PENDIENTE
+        bool crear_alerta(const std::string &alerta){
+            return true;
+        }
 
         bool leer_del_disco(){ // esta funcion reconstruye la base de datos
             std::ifstream arch("baseDatos.dat", std::ios::binary);
@@ -318,6 +372,7 @@ class BaseDeDatos{
             }
             return false;
         }
+
 
 };
 
