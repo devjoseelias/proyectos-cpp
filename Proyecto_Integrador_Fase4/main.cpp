@@ -62,14 +62,19 @@ class Alumno{
 class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
-        std::atomic<int> alerta_num = 0;
-        const std::vector<std::string> alertas = {"[SISTEMA]: Sistema iniciado. ", "[SISTEMA]: Alumnos registrado. ", "[SISTEMA]: Infortmacion de alumno actualizada. ", "[SISTEMA]: Guardado en disco. ", "[SISTEMA]: Archivo de guardadfo .dat eliminado. "};
+        const std::vector<std::string> alertas = {
+            "[SISTEMA]: Sistema iniciado. ", 
+            "[SISTEMA]: Alumno registrado. ", 
+            "[SISTEMA]: Informacion de alumno actualizada. ", 
+            "[SISTEMA]: Guardado en disco. ", 
+            "[SISTEMA]: Archivo de guardado .dat eliminado. "
+        };
         std::mutex amtx;
         public:
         BaseDeDatos(){
-
+            crear_alerta(0);
         }
-
+        
         bool registrar_alumno(std::string &&nombre_alumno, int &&registro, int &&calificacion){ // Esta es la funcion de INSERTAR
             std::lock_guard<std::mutex> guardia(mtx); //esto es lo primero, que es asegurar que nada ni nadie más modifique mis usuarios
 
@@ -91,14 +96,8 @@ class BaseDeDatos{
             int rTemp = registro;
             int cTemp = calificacion;
             alumnos_registrados[std::move(nombre_usuario)] = std::make_unique<Alumno>(std::move(nombre_alumno), std::move(registro), std::move(calificacion));
-
-            {
-                std::lock_guard<std::mutex> guardia(amtx);
-                alerta_num = 1;
-            }
-
             //Imprimo en pantalla todos los datos:
-            
+            crear_alerta(1);
             std::cout << "Usuario registardo con exito, recuerda que los siguientes datos son indispensables para futuras modificaciones:\n1. [Usuario] : " << nTemp << "\n2. [Nombre completo] : " << naTemp << "\n3. [Registro] : " << rTemp << "\n4. [Calificacion] : " << cTemp << "\n";
             return true;
         }       
@@ -130,10 +129,7 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_nombre(nuevo_nombre)){
                     std::cout << "\nExito. Nuevo nombre establecido.\n";
-                    {
-                        std::lock_guard<std::mutex> guardia(amtx);
-                        alerta_num = 2;
-                    }
+                    crear_alerta(2);
                     return true;
                     
                 } else{
@@ -150,10 +146,7 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_registro(nuevo_registro)){
                     std::cout << "\nExito. Nuevo registro establecido.\n";
-                    {
-                        std::lock_guard<std::mutex> guardia(amtx);
-                        alerta_num = 2;
-                    }
+                    crear_alerta(2);
                     return true;
                 } else{
                     std::cout << "\nError al actualizar el registro.\n";
@@ -169,10 +162,7 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_calificacion(nueva_calificacion)){
                     std::cout << "\nExito. Nueva calificacion establecida.\n";
-                    {
-                        std::lock_guard<std::mutex> guardia(amtx);
-                        alerta_num = 2;
-                    }
+                    crear_alerta(2);
                     return true;
                 } else{
                     std::cout << "\nError al establecer la nueva calificacion.\n";
@@ -228,32 +218,26 @@ class BaseDeDatos{
                     arch.write(reinterpret_cast<const char*>(&cTemp), sizeof(cTemp));
                 }
                 }
-                {
-                    std::lock_guard<std::mutex> guardia(amtx);
-                    alerta_num = 3;
-                }
                 arch.close();
                 std::cout << "\nGuardado correctamente.\n";
+                crear_alerta(3);
             }
             return true;
         }
 
-        bool crear_alerta(){
-            while(motor_encendido){
-                std::ofstream arch("registros.txt", std::ios::app);
-                if(!arch.is_open()){
-                    std::cerr << "Error al abrir archivo de registros.\n";
-                }
-                std::time_t tiempo_actual = std::time(nullptr);
-                std::string timestamp = std::ctime(&tiempo_actual);
-                {
-                    std::lock_guard<std::mutex> guardia(amtx);
-                    std::string nueva_alerta = alertas[alerta_num] + timestamp;
-                    arch << nueva_alerta;
-                }
-                std::cout << "Alerta nueva impresa.\n";
-                std::this_thread::sleep_for(std::chrono::seconds(5));
+        bool crear_alerta(const int na){
+            std::ofstream arch("registros.txt", std::ios::app);
+            if(!arch.is_open()){
+               std::cerr << "Error al abrir archivo de registros.\n";
             }
+            std::time_t tiempo_actual = std::time(nullptr);
+            std::string timestamp = std::ctime(&tiempo_actual);
+            {
+                std::lock_guard<std::mutex> guardia(amtx);
+                std::string nueva_alerta = alertas[na] + timestamp;
+                arch << nueva_alerta;
+            }
+            std::cout << "Alerta nueva impresa.\n";
             return true;
         }
 
@@ -356,10 +340,7 @@ class BaseDeDatos{
             if(std::filesystem::exists(rutaArchivo)){
                 if(std::filesystem::remove(rutaArchivo)){
                     std::cout << "Archivo eliminado con exito.\n";
-                    {
-                        std::lock_guard<std::mutex> guardia(amtx);
-                        alerta_num = 4;
-                    }
+                    crear_alerta(4);
                     return true;
                 } else{
                     std::cout << "No se pudo eliminar el archivo.\n";
@@ -410,7 +391,6 @@ int main(int argc, char* argv[]){
     std::thread cargar_datos(&BaseDeDatos::leer_del_disco, &db);
     cargar_datos.join();
     std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
-    std::thread alertas_txt(&BaseDeDatos::crear_alerta, &db);
     std::string comando = argv[1];
 
     std::string nombre;
@@ -424,7 +404,7 @@ int main(int argc, char* argv[]){
     } else if(comando == "--version"){
         motor_encendido = false;
         peticion_libre = true;
-        std::cout << "CLI++ v.1.6.1" << std::endl;
+        std::cout << "CLI++ v.1.7.0" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
@@ -482,6 +462,5 @@ int main(int argc, char* argv[]){
     }
     motor_encendido = false;
     guardado_sp.join();
-    alertas_txt.join();
     return 0;
 }
