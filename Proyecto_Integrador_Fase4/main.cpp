@@ -13,6 +13,7 @@
 
 std::mutex mtx;
 std::atomic<bool> motor_encendido(true);
+std::atomic<bool> peticion_libre(false);
 
 class Alumno{
     private:
@@ -61,7 +62,10 @@ class Alumno{
 class BaseDeDatos{
     private:
         std::unordered_map<std::string, std::unique_ptr<Alumno>> alumnos_registrados;
-    public:
+        std::atomic<int> alerta_num = 0;
+        const std::vector<std::string> alertas = {"[SISTEMA]: Sistema iniciado. ", "[SISTEMA]: Alumnos registrado. ", "[SISTEMA]: Infortmacion de alumno actualizada. ", "[SISTEMA]: Guardado en disco. ", "[SISTEMA]: Archivo de guardadfo .dat eliminado. "};
+        std::mutex amtx;
+        public:
         BaseDeDatos(){
 
         }
@@ -87,6 +91,11 @@ class BaseDeDatos{
             int rTemp = registro;
             int cTemp = calificacion;
             alumnos_registrados[std::move(nombre_usuario)] = std::make_unique<Alumno>(std::move(nombre_alumno), std::move(registro), std::move(calificacion));
+
+            {
+                std::lock_guard<std::mutex> guardia(amtx);
+                alerta_num = 1;
+            }
 
             //Imprimo en pantalla todos los datos:
             
@@ -121,7 +130,12 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_nombre(nuevo_nombre)){
                     std::cout << "\nExito. Nuevo nombre establecido.\n";
+                    {
+                        std::lock_guard<std::mutex> guardia(amtx);
+                        alerta_num = 2;
+                    }
                     return true;
+                    
                 } else{
                     std::cout << "\nError al establecer nuevo nombre.\n";
                     return false;
@@ -136,6 +150,10 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_registro(nuevo_registro)){
                     std::cout << "\nExito. Nuevo registro establecido.\n";
+                    {
+                        std::lock_guard<std::mutex> guardia(amtx);
+                        alerta_num = 2;
+                    }
                     return true;
                 } else{
                     std::cout << "\nError al actualizar el registro.\n";
@@ -151,6 +169,10 @@ class BaseDeDatos{
                 }
                 if(vf->second->set_calificacion(nueva_calificacion)){
                     std::cout << "\nExito. Nueva calificacion establecida.\n";
+                    {
+                        std::lock_guard<std::mutex> guardia(amtx);
+                        alerta_num = 2;
+                    }
                     return true;
                 } else{
                     std::cout << "\nError al establecer la nueva calificacion.\n";
@@ -206,17 +228,39 @@ class BaseDeDatos{
                     arch.write(reinterpret_cast<const char*>(&cTemp), sizeof(cTemp));
                 }
                 }
+                {
+                    std::lock_guard<std::mutex> guardia(amtx);
+                    alerta_num = 3;
+                }
                 arch.close();
                 std::cout << "\nGuardado correctamente.\n";
             }
             return true;
         }
 
-        bool crear_alerta(const std::string &alerta){
+        bool crear_alerta(){
+            while(motor_encendido){
+                std::ofstream arch("registros.txt", std::ios::app);
+                if(!arch.is_open()){
+                    std::cerr << "Error al abrir archivo de registros.\n";
+                }
+                std::time_t tiempo_actual = std::time(nullptr);
+                std::string timestamp = std::ctime(&tiempo_actual);
+                {
+                    std::lock_guard<std::mutex> guardia(amtx);
+                    std::string nueva_alerta = alertas[alerta_num] + timestamp;
+                    arch << nueva_alerta;
+                }
+                std::cout << "Alerta nueva impresa.\n";
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
             return true;
         }
 
         bool leer_del_disco(){ // esta funcion reconstruye la base de datos
+            if(motor_encendido && peticion_libre){
+                return false;
+            }
             std::ifstream arch("baseDatos.dat", std::ios::binary);
             if(!arch.is_open()){
                 std::cout << "Error al abrir el archivo de lectura.\n";
@@ -312,6 +356,10 @@ class BaseDeDatos{
             if(std::filesystem::exists(rutaArchivo)){
                 if(std::filesystem::remove(rutaArchivo)){
                     std::cout << "Archivo eliminado con exito.\n";
+                    {
+                        std::lock_guard<std::mutex> guardia(amtx);
+                        alerta_num = 4;
+                    }
                     return true;
                 } else{
                     std::cout << "No se pudo eliminar el archivo.\n";
@@ -362,6 +410,7 @@ int main(int argc, char* argv[]){
     std::thread cargar_datos(&BaseDeDatos::leer_del_disco, &db);
     cargar_datos.join();
     std::thread guardado_sp(&BaseDeDatos::guardar_en_disco, &db); //el hilo que hara el guardado en segundo plano.
+    std::thread alertas_txt(&BaseDeDatos::crear_alerta, &db);
     std::string comando = argv[1];
 
     std::string nombre;
@@ -370,10 +419,12 @@ int main(int argc, char* argv[]){
 
     if(comando == "--ayuda"){
         motor_encendido = false;
+        peticion_libre = true;
         pedir_ayuda();
     } else if(comando == "--version"){
         motor_encendido = false;
-        std::cout << "CLI++ v.1.4.0" << std::endl;
+        peticion_libre = true;
+        std::cout << "CLI++ v.1.6.1" << std::endl;
     } else if(comando == "--registrar"){
         std::cout << "Ingrese el nombre completo del alumno:\n>> ";
         std::getline(std::cin, nombre);
@@ -403,15 +454,18 @@ int main(int argc, char* argv[]){
         db.consultar_alumno(argv[2]);
     } else if(comando == "--forzar"){
         motor_encendido = false;
+        peticion_libre = true;
         db.forzar_guardado();
     } else if(comando == "?vacia"){
         motor_encendido = false;
         db.esta_vacia();
     } else if(comando == "--metricas"){
         motor_encendido = false;
+        peticion_libre = true;
         db.ver_metricas();
     } else if(comando == "--eliminar"){
         motor_encendido = false;
+        peticion_libre = true;
         std::string decision;
         std::cout << "Confirmas que quieres eliminar la base de datos? ('si'/'no'):\n>> ";
         std::cin >> decision;
@@ -423,9 +477,11 @@ int main(int argc, char* argv[]){
     } else{
         std::cout << "Comando no valido.\n";
         motor_encendido = false;
+        peticion_libre = true;
         pedir_ayuda();
     }
     motor_encendido = false;
     guardado_sp.join();
+    alertas_txt.join();
     return 0;
 }
