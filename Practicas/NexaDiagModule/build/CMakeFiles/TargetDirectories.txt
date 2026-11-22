@@ -1,0 +1,3 @@
+C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir
+C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/edit_cache.dir
+C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/rebuild_cache.dir

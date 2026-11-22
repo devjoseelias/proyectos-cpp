@@ -1,0 +1,35 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build",
+	"dir-cur-src" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule",
+	"dir-top-bld" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build",
+	"dir-top-src" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\Users\\josee\\Proyectos\\C++\\Practicas\\NexaDiagModule\\include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir",
+	"sources" : 
+	{
+		"CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/DiagnosticReading.cpp"
+		},
+		"CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp"
+		}
+	}
+}

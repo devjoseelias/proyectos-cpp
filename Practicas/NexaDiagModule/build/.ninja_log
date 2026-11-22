@@ -1,0 +1,24 @@
+# ninja log v7
+5	41	8170605762976756	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi	175f44954d4a42ae
+1	41	8170605762946759	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.ddi	513c09185997d67e
+41	75	8170605763638137	CMakeFiles/NexaDiagModule.dir/CXX.dd	fd22498e44980b23
+41	75	8170605763638137	CMakeFiles/NexaDiagModule.dir/CXXModules.json	fd22498e44980b23
+41	75	8170605763638137	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap	fd22498e44980b23
+41	75	8170605763638137	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap	fd22498e44980b23
+76	144	8170605763688140	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj	9dcebd7b6307de46
+79	145	8170605763718142	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj	b6750c6d4b9a6c39
+2	44	8170606291664282	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.ddi	513c09185997d67e
+7	45	8170606291714191	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi	175f44954d4a42ae
+45	79	8170606292095075	CMakeFiles/NexaDiagModule.dir/CXX.dd	fd22498e44980b23
+45	79	8170606292095075	CMakeFiles/NexaDiagModule.dir/CXXModules.json	fd22498e44980b23
+45	79	8170606292095075	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap	fd22498e44980b23
+45	79	8170606292095075	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap	fd22498e44980b23
+79	156	8170606292434746	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj	9dcebd7b6307de46
+83	156	8170606292474751	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj	b6750c6d4b9a6c39
+2	35	8170606573990020	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi	175f44954d4a42ae
+35	69	8170606574319027	CMakeFiles/NexaDiagModule.dir/CXX.dd	fd22498e44980b23
+35	69	8170606574319027	CMakeFiles/NexaDiagModule.dir/CXXModules.json	fd22498e44980b23
+35	69	8170606574319027	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap	fd22498e44980b23
+35	69	8170606574319027	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap	fd22498e44980b23
+69	128	8170606574659047	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj	b6750c6d4b9a6c39
+128	223	8170606575254272	NexaDiagModule.exe	77af6f5d9a5899d4

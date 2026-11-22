@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include -g -std=c++20 -fmodules-ts -fmodule-mapper=CMakeFiles\\NexaDiagModule.dir\\src\\main.cpp.obj.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles\\NexaDiagModule.dir\\src\\main.cpp.obj -c C:\\Users\\josee\\Proyectos\\C++\\Practicas\\NexaDiagModule\\src\\main.cpp",
+  "file": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp",
+  "output": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -IC:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include -g -std=c++20 -fmodules-ts -fmodule-mapper=CMakeFiles\\NexaDiagModule.dir\\src\\DiagnosticReading.cpp.obj.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles\\NexaDiagModule.dir\\src\\DiagnosticReading.cpp.obj -c C:\\Users\\josee\\Proyectos\\C++\\Practicas\\NexaDiagModule\\src\\DiagnosticReading.cpp",
+  "file": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/DiagnosticReading.cpp",
+  "output": "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj"
+}
+]
