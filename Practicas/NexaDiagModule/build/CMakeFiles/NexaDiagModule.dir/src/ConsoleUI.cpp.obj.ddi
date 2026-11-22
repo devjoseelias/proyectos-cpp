@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles\\NexaDiagModule.dir\\src\\ConsoleUI.cpp.obj",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

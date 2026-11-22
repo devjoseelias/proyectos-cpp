@@ -87,7 +87,26 @@ build CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj: CXX_COMPILER_
   TARGET_SUPPORT_DIR = CMakeFiles\NexaDiagModule.dir
   dyndep = CMakeFiles/NexaDiagModule.dir/CXX.dd
 
-build CMakeFiles/NexaDiagModule.dir/CXX.dd | CMakeFiles/NexaDiagModule.dir/CXXModules.json CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap: CXX_DYNDEP__NexaDiagModule_Debug CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.ddi CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi | C$:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir/CXXDependInfo.json
+build CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.ddi: CXX_SCAN__NexaDiagModule_Debug C$:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp || cmake_object_order_depends_target_NexaDiagModule
+  DEP_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj.ddi
+  FLAGS = -g -std=c++20
+  INCLUDES = -IC:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include
+  OBJ_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj.ddi.i
+
+build CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj: CXX_COMPILER__NexaDiagModule_scanned_Debug C$:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp | CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.modmap || cmake_object_order_depends_target_NexaDiagModule CMakeFiles/NexaDiagModule.dir/CXX.dd
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj.d
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles\NexaDiagModule.dir\src\ConsoleUI.cpp.obj.modmap
+  FLAGS = -g -std=c++20
+  INCLUDES = -IC:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include
+  OBJECT_DIR = CMakeFiles\NexaDiagModule.dir
+  OBJECT_FILE_DIR = CMakeFiles\NexaDiagModule.dir\src
+  TARGET_SUPPORT_DIR = CMakeFiles\NexaDiagModule.dir
+  dyndep = CMakeFiles/NexaDiagModule.dir/CXX.dd
+
+build CMakeFiles/NexaDiagModule.dir/CXX.dd | CMakeFiles/NexaDiagModule.dir/CXXModules.json CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.modmap: CXX_DYNDEP__NexaDiagModule_Debug CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.ddi CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.ddi | C$:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir/CXXDependInfo.json
 
 
 # =============================================================================
@@ -97,7 +116,7 @@ build CMakeFiles/NexaDiagModule.dir/CXX.dd | CMakeFiles/NexaDiagModule.dir/CXXMo
 #############################################
 # Link the executable NexaDiagModule.exe
 
-build NexaDiagModule.exe: CXX_EXECUTABLE_LINKER__NexaDiagModule_Debug CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj
+build NexaDiagModule.exe: CXX_EXECUTABLE_LINKER__NexaDiagModule_Debug CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj
   CONFIG = Debug
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

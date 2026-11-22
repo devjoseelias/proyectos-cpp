@@ -3,3 +3,5 @@ build CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj: dyndep
 
 build CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj: dyndep
 
+build CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj: dyndep
+

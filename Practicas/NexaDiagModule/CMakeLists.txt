@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(NexaDiagModule
     src/main.cpp
     src/DiagnosticReading.cpp
+    src/ConsoleUI.cpp
 )
 
 target_include_directories(NexaDiagModule PUBLIC include) #Los archivos .h, .pp estan en include/

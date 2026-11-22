@@ -21,6 +21,11 @@
 	"module-dir" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/build/CMakeFiles/NexaDiagModule.dir",
 	"sources" : 
 	{
+		"CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp"
+		},
 		"CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj" : 
 		{
 			"language" : "CXX",
