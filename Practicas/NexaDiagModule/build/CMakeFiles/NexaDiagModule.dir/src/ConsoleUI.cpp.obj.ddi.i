@@ -44143,6 +44143,7 @@ namespace std
 void printBanner();
 void printOptions();
 int getOption();
+std::string getParameter();
 # 2 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp" 2
 
 
@@ -44153,7 +44154,7 @@ void printBanner(){
 }
 
 void printOptions(){
-    std::cout << "1. Add reading.\n2. Display readings.\n3. Calculate average.\n4. Search reading.\n5. Exit.\n\n";
+    std::cout << "1. Add reading.\n2. Display readings.\n3. Search reading.\n4. Calculate parameter average.\n5. Exit.\n\n";
 }
 
 int getOption(){
@@ -44167,4 +44168,18 @@ int getOption(){
         std::cin >> option;
     }
     return option;
+}
+
+std::string getParameter(){
+    std::string parameter;
+    std::cout << "Parameter name: ";
+    std::cin.clear();
+    std::cin.ignore();
+    std::getline(std::cin, parameter);
+    while(parameter == ""){
+        std::cout << "Invalid entry. Retype: ";
+        std::getline(std::cin, parameter);
+    }
+    std::cout << "\n";
+    return parameter;
 }

@@ -49195,8 +49195,15 @@ struct ReadingData{
 
 extern std::vector<ReadingData> VehicleDiagnosis;
 
+enum class Status{
+    NotRegistered = 1,
+    NoReadings = 2,
+    ReadingFound = 3
+};
+
 void addReading();
 void displayReadings();
+Status searchReading(std::string parameterName);
 # 4 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp" 2
 # 1 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp" 1
        
@@ -49205,6 +49212,7 @@ void displayReadings();
 void printBanner();
 void printOptions();
 int getOption();
+std::string getParameter();
 # 5 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp" 2
 
 int main(){
@@ -49221,7 +49229,7 @@ int main(){
                 displayReadings();
                 break;
             case 3:
-
+                if(searchReading(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 4:
 

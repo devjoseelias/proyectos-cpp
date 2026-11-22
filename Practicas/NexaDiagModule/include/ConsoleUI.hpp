@@ -4,3 +4,4 @@
 void printBanner();
 void printOptions();
 int getOption();
+std::string getParameter();

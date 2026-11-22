@@ -24,3 +24,16 @@ int getOption(){
     return option;
 }
 
+std::string getParameter(){
+    std::string parameter;
+    std::cout << "Parameter name: ";
+    std::cin.clear();
+    std::cin.ignore();
+    std::getline(std::cin, parameter);
+    while(parameter == ""){
+        std::cout << "Invalid entry. Retype: ";
+        std::getline(std::cin, parameter);
+    }
+    std::cout << "\n";
+    return parameter;
+}

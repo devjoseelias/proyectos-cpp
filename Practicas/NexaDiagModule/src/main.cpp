@@ -17,7 +17,7 @@ int main(){
                 displayReadings();
                 break;
             case 3:
-            
+                if(searchReading(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 4:
 

@@ -12,6 +12,12 @@ struct ReadingData{
 
 extern std::vector<ReadingData> VehicleDiagnosis;
 
+enum class Status{
+    NotRegistered = 1,
+    NoReadings = 2,
+    ReadingFound = 3
+};
+
 void addReading();
 void displayReadings();
-void searchReading();
+Status searchReading(std::string parameterName);

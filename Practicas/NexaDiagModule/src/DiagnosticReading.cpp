@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 std::vector<ReadingData> VehicleDiagnosis = {};
 
@@ -54,6 +55,18 @@ void displayReadings(){
     std::cout << "\n";
 }
 
-void searchReading(){
-    
+Status searchReading(std::string parameterName){
+    if(VehicleDiagnosis.empty()){
+        std::cout << "There are no readings of this vehicle.\n\n";
+        return Status::NoReadings;
+    }
+    Status found = Status::NotRegistered;
+    for(const auto& lecture : VehicleDiagnosis){
+        if(lecture.parameterName == parameterName){
+            found = Status::ReadingFound;
+            std::cout << parameterName << ": " << lecture.value << " " << lecture.unit << std::endl;
+        }
+    }
+    std::cout << "\n";
+    return found;
 }
