@@ -154,4 +154,9 @@ CMakeFiles\NexaDiagModule.dir\src\DiagnosticReading.cpp.obj.ddi: \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/ostream_print.h \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/ostream.tcc \
  C:/msys64/ucrt64/include/c++/16.1.0/istream \
- C:/msys64/ucrt64/include/c++/16.1.0/bits/istream.tcc
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/istream.tcc \
+ C:/msys64/ucrt64/include/c++/16.1.0/vector \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_uninitialized.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_vector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_bvector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/vector.tcc

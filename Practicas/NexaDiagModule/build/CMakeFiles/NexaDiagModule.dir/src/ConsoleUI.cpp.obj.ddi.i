@@ -5,7 +5,6 @@
 # 1 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp"
 # 1 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp" 1
        
-
 # 1 "C:/msys64/ucrt64/include/c++/16.1.0/iostream" 1 3
 # 40 "C:/msys64/ucrt64/include/c++/16.1.0/iostream" 3
 # 1 "C:/msys64/ucrt64/include/c++/16.1.0/bits/requires_hosted.h" 1 3
@@ -44137,16 +44136,35 @@ namespace std
 # 87 "C:/msys64/ucrt64/include/c++/16.1.0/iostream" 3
 
 }
-# 4 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp" 2
+# 3 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp" 2
 
 
-
-# 6 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp"
+# 4 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp"
 void printBanner();
+void printOptions();
+int getOption();
 # 2 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/ConsoleUI.cpp" 2
+
 
 
 
 void printBanner(){
     std::cout << "=============================\n         NEXADIAG PRO         \n  Diagnostic Reading Module  \n=============================\n\n";
+}
+
+void printOptions(){
+    std::cout << "1. Add reading.\n2. Display readings.\n3. Calculate average.\n4. Search reading.\n5. Exit.\n\n";
+}
+
+int getOption(){
+    int option;
+    std::cout << "Select option: ";
+    std::cin >> option;
+    while(option <= 0 || option >= 6){
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid entry. Retype: ";
+        std::cin >> option;
+    }
+    return option;
 }

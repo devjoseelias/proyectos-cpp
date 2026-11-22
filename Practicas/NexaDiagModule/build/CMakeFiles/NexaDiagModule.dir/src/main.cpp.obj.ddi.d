@@ -155,4 +155,9 @@ CMakeFiles\NexaDiagModule.dir\src\main.cpp.obj.ddi: \
  C:/msys64/ucrt64/include/c++/16.1.0/istream \
  C:/msys64/ucrt64/include/c++/16.1.0/bits/istream.tcc \
  C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/DiagnosticReading.hpp \
+ C:/msys64/ucrt64/include/c++/16.1.0/vector \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_uninitialized.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_vector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/stl_bvector.h \
+ C:/msys64/ucrt64/include/c++/16.1.0/bits/vector.tcc \
  C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp

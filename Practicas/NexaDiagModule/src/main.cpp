@@ -4,6 +4,28 @@
 #include "ConsoleUI.hpp"
 
 int main(){
+    int option;
     printBanner();
+    do{
+        printOptions();
+        option = getOption();
+        switch(option){
+            case 1:
+                addReading();
+                break;
+            case 2:
+                displayReadings();
+                break;
+            case 3:
+            
+                break;
+            case 4:
+
+                break;
+            case 5:
+                break;
+        }
+    } while(option != 5);
+
     return 0;
 }
