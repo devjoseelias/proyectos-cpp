@@ -20,7 +20,7 @@ int main(){
                 if(searchReading(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 4:
-
+                if(calculateAverage(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 5:
                 break;

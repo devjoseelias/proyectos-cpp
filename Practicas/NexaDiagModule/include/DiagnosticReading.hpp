@@ -21,3 +21,4 @@ enum class Status{
 void addReading();
 void displayReadings();
 Status searchReading(std::string parameterName);
+Status calculateAverage(std::string parameterName);

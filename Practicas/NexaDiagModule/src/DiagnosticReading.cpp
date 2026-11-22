@@ -70,3 +70,26 @@ Status searchReading(std::string parameterName){
     std::cout << "\n";
     return found;
 }
+
+Status calculateAverage(std::string parameterName){
+    if(VehicleDiagnosis.empty()){
+        std::cout << "There are no readings of this vehicle.\n\n";
+        return Status::NoReadings;
+    }
+    Status found = Status::NotRegistered;
+    double sum = 0;
+    int count = 0;
+    std::string unit;
+    for(const auto& lecture : VehicleDiagnosis){
+        if(lecture.parameterName == parameterName){
+            std::cout << parameterName << ": " << lecture.value << " " << lecture.unit << std::endl;
+            sum += lecture.value;
+            count++;
+            unit = lecture.unit;
+            found = Status::ReadingFound;
+        }
+    }
+    sum = sum / count;
+    std::cout << "The avergage of " << parameterName << "is: " << sum << " " << unit << "\n\n";
+    return found;
+}
