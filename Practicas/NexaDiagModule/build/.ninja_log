@@ -57,3 +57,11 @@
 147	177	8170973026688301	CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.modmap	b74002fecd0b05bf
 178	503	8170973026998311	CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj	44a3e7b9868a652e
 503	618	8170973030241759	NexaDiagModule.exe	771d8d9b6945152a
+14	155	8170976413848238	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.ddi	175f44954d4a42ae
+155	189	8170976415253379	CMakeFiles/NexaDiagModule.dir/CXX.dd	b74002fecd0b05bf
+155	189	8170976415253379	CMakeFiles/NexaDiagModule.dir/CXXModules.json	b74002fecd0b05bf
+155	189	8170976415253379	CMakeFiles/NexaDiagModule.dir/src/main.cpp.obj.modmap	b74002fecd0b05bf
+155	189	8170976415253379	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj.modmap	b74002fecd0b05bf
+155	189	8170976415253379	CMakeFiles/NexaDiagModule.dir/src/ConsoleUI.cpp.obj.modmap	b74002fecd0b05bf
+190	597	8170976415603626	CMakeFiles/NexaDiagModule.dir/src/DiagnosticReading.cpp.obj	b6750c6d4b9a6c39
+597	706	8170976419677717	NexaDiagModule.exe	771d8d9b6945152a

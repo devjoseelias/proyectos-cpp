@@ -61061,8 +61061,10 @@ Status calculateAverage(std::string parameterName, std::string unit){
             found = Status::ReadingFound;
         }
     }
-    if(count == 0) count = -1;
-    sum = sum / count;
-    std::cout << "The average of " << parameterName << " is: " << sum << " " << unitPrintable << "\n\n";
+    if(count != 0){
+        sum = sum / count;
+        std::cout << "The average of " << parameterName << " is: " << sum << " " << unitPrintable << "\n\n";
+    }
+
     return found;
 }
