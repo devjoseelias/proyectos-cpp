@@ -44158,6 +44158,7 @@ void printOptions(){
     std::cout << "1. Add reading.\n2. Display readings.\n3. Search reading.\n4. Calculate parameter average.\n5. Exit.\n\n";
 }
 
+
 int getOption(){
     int option;
     std::cout << "Select option: ";
@@ -44172,6 +44173,7 @@ int getOption(){
     return option;
 }
 
+
 std::string getParameter(){
     std::string parameter;
     std::cin.clear();
@@ -44184,6 +44186,7 @@ std::string getParameter(){
     std::cout << "\n";
     return parameter;
 }
+
 
 std::string getUnit(){
     std::string unit;

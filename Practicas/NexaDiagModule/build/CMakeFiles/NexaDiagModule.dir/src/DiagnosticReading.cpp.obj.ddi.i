@@ -60978,8 +60978,10 @@ lexicographical_compare(_ExecutionPolicy&& __exec, _ForwardIterator1 __first1, _
 # 7 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/DiagnosticReading.cpp"
 std::vector<ReadingData> VehicleDiagnosis = {};
 
+
 void addReading(){
     ReadingData data;
+
 
     std::cin.clear();
     std::cin.ignore();
@@ -61015,6 +61017,7 @@ void addReading(){
     VehicleDiagnosis.push_back(data);
 }
 
+
 void displayReadings(){
     std::cout << "\n";
     if(VehicleDiagnosis.empty()){
@@ -61026,6 +61029,7 @@ void displayReadings(){
     }
     std::cout << "\n";
 }
+
 
 Status searchReading(std::string parameterName){
     if(VehicleDiagnosis.empty()){
@@ -61042,6 +61046,7 @@ Status searchReading(std::string parameterName){
     std::cout << "\n";
     return found;
 }
+
 
 Status calculateAverage(std::string parameterName, std::string unit){
     if(VehicleDiagnosis.empty()){
