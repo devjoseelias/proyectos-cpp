@@ -2,7 +2,7 @@
 ## What is it?
 **NexaDiagModule** is a console program designed for the automotive industry, and its main purpose is to be an easy way to register different types of vehicle data readings, each with its own name, value and unit. The user can insert many entries of different lectures, or the same -with different units-, and then the program offers some options, which are:
 1. Add reading - Then asks for the name, the value and unit.
-2. Display readings - Displays on screen alll the readings that've been made to the car
+2. Display readings - Displays on screen all the readings that've been made to the car
 3. Search reading - Asks for the name, then displays, but it doesnt differentiate from the multiple units (if apply)
 4. Calculate the average of some readings - It asks for both the name and the unit, so it doesn't mix the values without casting them.
 5. Exit - Stops the program execution
