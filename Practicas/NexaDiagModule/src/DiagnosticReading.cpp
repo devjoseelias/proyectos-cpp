@@ -71,7 +71,7 @@ Status searchReading(std::string parameterName){
     return found;
 }
 
-Status calculateAverage(std::string parameterName){
+Status calculateAverage(std::string parameterName, std::string unit){
     if(VehicleDiagnosis.empty()){
         std::cout << "There are no readings of this vehicle.\n\n";
         return Status::NoReadings;
@@ -79,17 +79,18 @@ Status calculateAverage(std::string parameterName){
     Status found = Status::NotRegistered;
     double sum = 0;
     int count = 0;
-    std::string unit;
-    for(const auto& lecture : VehicleDiagnosis){
-        if(lecture.parameterName == parameterName){
+    std::string unitPrintable;
+    for(const auto& lecture : VehicleDiagnosis){ 
+        if(lecture.parameterName == parameterName && unit == lecture.unit){
             std::cout << parameterName << ": " << lecture.value << " " << lecture.unit << std::endl;
             sum += lecture.value;
             count++;
-            unit = lecture.unit;
+            unitPrintable = lecture.unit;
             found = Status::ReadingFound;
         }
     }
+    if(count == 0) count = -1;
     sum = sum / count;
-    std::cout << "The avergage of " << parameterName << "is: " << sum << " " << unit << "\n\n";
+    std::cout << "The average of " << parameterName << " is: " << sum << " " << unitPrintable << "\n\n";
     return found;
 }

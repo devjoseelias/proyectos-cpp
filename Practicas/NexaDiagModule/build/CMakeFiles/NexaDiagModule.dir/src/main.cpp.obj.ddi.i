@@ -49204,7 +49204,7 @@ enum class Status{
 void addReading();
 void displayReadings();
 Status searchReading(std::string parameterName);
-Status calculateAverage(std::string parameterName);
+Status calculateAverage(std::string parameterName, std::string unit);
 # 4 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp" 2
 # 1 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/include/ConsoleUI.hpp" 1
        
@@ -49214,6 +49214,7 @@ void printBanner();
 void printOptions();
 int getOption();
 std::string getParameter();
+std::string getUnit();
 # 5 "C:/Users/josee/Proyectos/C++/Practicas/NexaDiagModule/src/main.cpp" 2
 
 int main(){
@@ -49233,7 +49234,7 @@ int main(){
                 if(searchReading(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 4:
-                if(calculateAverage(getParameter()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
+                if(calculateAverage(getParameter(), getUnit()) == Status::NotRegistered){ std::cout << "The parameter is not registered.\n\n"; }
                 break;
             case 5:
                 break;

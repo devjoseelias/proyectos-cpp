@@ -21,14 +21,14 @@ int getOption(){
         std::cout << "Invalid entry. Retype: ";
         std::cin >> option;
     }
+    std::cin.clear();
     return option;
 }
 
 std::string getParameter(){
     std::string parameter;
-    std::cout << "Parameter name: ";
     std::cin.clear();
-    std::cin.ignore();
+    std::cout << "Parameter name: ";
     std::getline(std::cin, parameter);
     while(parameter == ""){
         std::cout << "Invalid entry. Retype: ";
@@ -36,4 +36,17 @@ std::string getParameter(){
     }
     std::cout << "\n";
     return parameter;
+}
+
+std::string getUnit(){
+    std::string unit;
+    std::cin.clear();
+    std::cin.ignore();
+    std::cout << "Unit: ";
+    std::getline(std::cin, unit);
+    while(unit == ""){
+        std::cout << "Invalid entry. Retype: ";
+        std::getline(std::cin, unit);
+    }
+    return unit;
 }
